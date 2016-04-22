@@ -1,0 +1,8 @@
+G:\Users\projects\C#\Projects\SEThrusterCalc\SEThrusterCalc\bin\Debug\SEThrusterCalc.exe.config
+G:\Users\projects\C#\Projects\SEThrusterCalc\SEThrusterCalc\bin\Debug\SEThrusterCalc.exe
+G:\Users\projects\C#\Projects\SEThrusterCalc\SEThrusterCalc\bin\Debug\SEThrusterCalc.pdb
+G:\Users\projects\C#\Projects\SEThrusterCalc\SEThrusterCalc\obj\Debug\SEThrusterCalc.csprojResolveAssemblyReference.cache
+G:\Users\projects\C#\Projects\SEThrusterCalc\SEThrusterCalc\obj\Debug\SEThrusterCalc.Properties.Resources.resources
+G:\Users\projects\C#\Projects\SEThrusterCalc\SEThrusterCalc\obj\Debug\SEThrusterCalc.csproj.GenerateResource.Cache
+G:\Users\projects\C#\Projects\SEThrusterCalc\SEThrusterCalc\obj\Debug\SEThrusterCalc.exe
+G:\Users\projects\C#\Projects\SEThrusterCalc\SEThrusterCalc\obj\Debug\SEThrusterCalc.pdb

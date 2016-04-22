@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Thrusters>
+  <Thruster Name="Thruster" GridType="Large" DisplayName ="Large Thruster" Thrust="3600000" MaxThrust="1" MinThrust="0,33333333" Mass="43200" MaxPower="33600" MinThrustHeight="10000" MaxThrustHeight="20000"/>
+  <Thruster Name="Thruster" GridType="Small" DisplayName ="Large Thruster" Thrust="144000" MaxThrust="1" MinThrust="0,33333333" Mass="721" MaxPower="2400" MinThrustHeight="10000" MaxThrustHeight="20000"/>
+  <Thruster Name="SmallThruster" GridType="Large" DisplayName ="Small Thruster" Thrust="288000" MaxThrust="1" MinThrust="0,33333333" Mass="4384" MaxPower="3360" MinThrustHeight="10000" MaxThrustHeight="20000"/>
+  <Thruster Name="SmallThruster" GridType="Small" DisplayName ="Small Thruster" Thrust="12000" MaxThrust="1" MinThrust="0,33333333" Mass="93" MaxPower="201" MinThrustHeight="10000" MaxThrustHeight="20000"/>
+  <Thruster Name="Large_Hydrogen_Thruster" GridType="Large" DisplayName ="Large Hydrogen Thruster" Thrust="6000000" MaxThrust="1" MinThrust="1" Mass="6940" MaxPower="10000" MinThrustHeight="0" MaxThrustHeight="45000"/>
+  <Thruster Name="Large_Hydrogen_Thruster" GridType="Small" DisplayName ="Large Hydrogen Thruster" Thrust="400000" MaxThrust="1" MinThrust="1" Mass="1222" MaxPower="800" MinThrustHeight="0" MaxThrustHeight="45000"/>
+  <Thruster Name="Small_Hydrogen_Thruster" GridType="Large" DisplayName ="Small Hydrogen Thruster" Thrust="900000" MaxThrust="1" MinThrust="1" Mass="1420" MaxPower="1700" MinThrustHeight="0" MaxThrustHeight="45000"/>
+  <Thruster Name="Small_Hydrogen_Thruster" GridType="Small" DisplayName ="Small Hydrogen Thruster" Thrust="82000" MaxThrust="1" MinThrust="1" Mass="334" MaxPower="170" MinThrustHeight="0" MaxThrustHeight="45000"/>
+  <Thruster Name="Large_Atmospheric_Thruster" GridType="Large" DisplayName ="Large Atmospheric Thruster" Thrust="5400000" MaxThrust="0,9" MinThrust="0" Mass="33834" MaxPower="16360" MinThrustHeight="10000" MaxThrustHeight="0"/>
+  <Thruster Name="Large_Atmospheric_Thruster" GridType="Small" DisplayName ="Large Atmospheric Thruster" Thrust="408000" MaxThrust="0,9" MinThrust="0" Mass="4244" MaxPower="2400" MinThrustHeight="10000" MaxThrustHeight="0"/>
+  <Thruster Name="Small_Atmospheric_Thruster" GridType="Large" DisplayName ="Small Atmospheric Thruster" Thrust="420000" MaxThrust="0,9" MinThrust="0" Mass="4072" MaxPower="2360" MinThrustHeight="10000" MaxThrustHeight="0"/>
+  <Thruster Name="Small_Atmospheric_Thruster" GridType="Small" DisplayName ="Small Atmospheric Thruster" Thrust="80000" MaxThrust="0,9" MinThrust="0" Mass="539" MaxPower="701" MinThrustHeight="10000" MaxThrustHeight="0"/>
+</Thrusters>
+

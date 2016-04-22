@@ -1,0 +1,17 @@
+G:\Users\projects\C#\Projects\SEThrusterCalc\SEThrusterCalc\bin\Release\SEThrusterCalc.exe.config
+G:\Users\projects\C#\Projects\SEThrusterCalc\SEThrusterCalc\bin\Release\SEThrusterCalc.exe
+G:\Users\projects\C#\Projects\SEThrusterCalc\SEThrusterCalc\bin\Release\SEThrusterCalc.pdb
+G:\Users\projects\C#\Projects\SEThrusterCalc\SEThrusterCalc\obj\Release\SEThrusterCalc.Properties.Resources.resources
+G:\Users\projects\C#\Projects\SEThrusterCalc\SEThrusterCalc\obj\Release\SEThrusterCalc.csproj.GenerateResource.Cache
+G:\Users\projects\C#\Projects\SEThrusterCalc\SEThrusterCalc\obj\Release\SEThrusterCalc.exe
+G:\Users\projects\C#\Projects\SEThrusterCalc\SEThrusterCalc\obj\Release\SEThrusterCalc.pdb
+G:\Users\projects\C#\Projects\SEThrusterCalc\SEThrusterCalc\bin\Release\SEThrusterCalc.exe.CodeAnalysisLog.xml
+G:\Users\projects\C#\Projects\SEThrusterCalc\SEThrusterCalc\bin\Release\SEThrusterCalc.exe.lastcodeanalysissucceeded
+G:\Users\projects\C#\Projects\SEThrustersCalc\SEThrustersCalc\SEThrusterCalc\bin\Release\SEThrusterCalc.exe.config
+G:\Users\projects\C#\Projects\SEThrustersCalc\SEThrustersCalc\SEThrusterCalc\obj\Release\SEThrusterCalc.exe
+G:\Users\projects\C#\Projects\SEThrustersCalc\SEThrustersCalc\SEThrusterCalc\obj\Release\SEThrusterCalc.pdb
+G:\Users\projects\C#\Projects\SEThrustersCalc\SEThrustersCalc\SEThrusterCalc\bin\Release\SEThrusterCalc.exe
+G:\Users\projects\C#\Projects\SEThrustersCalc\SEThrustersCalc\SEThrusterCalc\bin\Release\SEThrusterCalc.pdb
+G:\Users\projects\C#\Projects\SEThrustersCalc\SEThrustersCalc\SEThrusterCalc\obj\Release\SEThrusterCalc.csprojResolveAssemblyReference.cache
+G:\Users\projects\C#\Projects\SEThrustersCalc\SEThrustersCalc\SEThrusterCalc\obj\Release\SEThrusterCalc.Properties.Resources.resources
+G:\Users\projects\C#\Projects\SEThrustersCalc\SEThrustersCalc\SEThrusterCalc\obj\Release\SEThrusterCalc.csproj.GenerateResource.Cache
