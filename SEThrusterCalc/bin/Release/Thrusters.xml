@@ -12,5 +12,9 @@
   <Thruster Name="Large_Atmospheric_Thruster" GridType="Small" DisplayName ="Large Atmospheric Thruster" Thrust="408000" MaxThrust="0,9" MinThrust="0" Mass="4244" MaxPower="2400" MinThrustHeight="10000" MaxThrustHeight="0"/>
   <Thruster Name="Small_Atmospheric_Thruster" GridType="Large" DisplayName ="Small Atmospheric Thruster" Thrust="420000" MaxThrust="0,9" MinThrust="0" Mass="4072" MaxPower="2360" MinThrustHeight="10000" MaxThrustHeight="0"/>
   <Thruster Name="Small_Atmospheric_Thruster" GridType="Small" DisplayName ="Small Atmospheric Thruster" Thrust="80000" MaxThrust="0,9" MinThrust="0" Mass="539" MaxPower="701" MinThrustHeight="10000" MaxThrustHeight="0"/>
+  <Thruster Name="Large_Atmos_T4" GridType="Large" DisplayName ="Large Atmos T4" Thrust="86400000" MaxThrust="0,9" MinThrust="0" Mass="1" MaxPower="256000" MinThrustHeight="10000" MaxThrustHeight="0"/>
+  <Thruster Name="Large_Atmos_T4" GridType="Small" DisplayName ="Large Atmos T4" Thrust="80000" MaxThrust="0,9" MinThrust="0" Mass="1" MaxPower="701" MinThrustHeight="10000" MaxThrustHeight="0"/>
+	<Thruster Name="Small_Atmos_T4" GridType="Large" DisplayName ="Small Atmos T4" Thrust="6720000" MaxThrust="0,9" MinThrust="0" Mass="1" MaxPower="37760" MinThrustHeight="10000" MaxThrustHeight="0"/>
+	<Thruster Name="Small_Atmos_T4" GridType="Small" DisplayName ="Small Atmos T4" Thrust="80000" MaxThrust="0,9" MinThrust="0" Mass="1" MaxPower="701" MinThrustHeight="10000" MaxThrustHeight="0"/>
 </Thrusters>
 

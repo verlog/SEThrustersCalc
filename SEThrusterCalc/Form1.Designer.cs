@@ -52,6 +52,8 @@
             this.button2 = new System.Windows.Forms.Button();
             this.labelGRange = new System.Windows.Forms.Label();
             this.textBoxGrange = new System.Windows.Forms.TextBox();
+            this.label_MaxPower = new System.Windows.Forms.Label();
+            this.label_cGravity = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar_Height)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_ThrustersOnGrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar_Accel)).BeginInit();
@@ -201,7 +203,7 @@
             // 
             this.label_ThrustSumm.AutoSize = true;
             this.label_ThrustSumm.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label_ThrustSumm.Location = new System.Drawing.Point(550, 60);
+            this.label_ThrustSumm.Location = new System.Drawing.Point(559, 60);
             this.label_ThrustSumm.Name = "label_ThrustSumm";
             this.label_ThrustSumm.Size = new System.Drawing.Size(102, 25);
             this.label_ThrustSumm.TabIndex = 16;
@@ -293,11 +295,33 @@
             this.textBoxGrange.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.textBoxGrange.TextChanged += new System.EventHandler(this.textBoxGrange_TextChanged);
             // 
+            // label_MaxPower
+            // 
+            this.label_MaxPower.AutoSize = true;
+            this.label_MaxPower.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label_MaxPower.Location = new System.Drawing.Point(559, 97);
+            this.label_MaxPower.Name = "label_MaxPower";
+            this.label_MaxPower.Size = new System.Drawing.Size(130, 25);
+            this.label_MaxPower.TabIndex = 25;
+            this.label_MaxPower.Text = "Max power: 0";
+            // 
+            // label_cGravity
+            // 
+            this.label_cGravity.AutoSize = true;
+            this.label_cGravity.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label_cGravity.Location = new System.Drawing.Point(559, 22);
+            this.label_cGravity.Name = "label_cGravity";
+            this.label_cGravity.Size = new System.Drawing.Size(161, 25);
+            this.label_cGravity.TabIndex = 26;
+            this.label_cGravity.Text = "Гравитация (G.)";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1289, 640);
+            this.Controls.Add(this.label_cGravity);
+            this.Controls.Add(this.label_MaxPower);
             this.Controls.Add(this.labelGRange);
             this.Controls.Add(this.textBoxGrange);
             this.Controls.Add(this.button2);
@@ -355,6 +379,8 @@
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Label labelGRange;
         private System.Windows.Forms.TextBox textBoxGrange;
+        private System.Windows.Forms.Label label_MaxPower;
+        private System.Windows.Forms.Label label_cGravity;
 
     }
 }

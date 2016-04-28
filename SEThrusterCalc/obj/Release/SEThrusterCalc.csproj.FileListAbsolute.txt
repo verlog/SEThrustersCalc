@@ -15,3 +15,8 @@ G:\Users\projects\C#\Projects\SEThrustersCalc\SEThrustersCalc\SEThrusterCalc\bin
 G:\Users\projects\C#\Projects\SEThrustersCalc\SEThrustersCalc\SEThrusterCalc\obj\Release\SEThrusterCalc.csprojResolveAssemblyReference.cache
 G:\Users\projects\C#\Projects\SEThrustersCalc\SEThrustersCalc\SEThrusterCalc\obj\Release\SEThrusterCalc.Properties.Resources.resources
 G:\Users\projects\C#\Projects\SEThrustersCalc\SEThrustersCalc\SEThrusterCalc\obj\Release\SEThrusterCalc.csproj.GenerateResource.Cache
+G:\Users\projects\C#\Projects\SEThrustersCalc\SEThrustersCalc\SEThrusterCalc\obj\Release\SEThrustersCalc.Form1.resources
+G:\Users\projects\C#\Projects\SEThrustersCalc\SEThrustersCalc\SEThrusterCalc\bin\Release\SharpDX.dll
+G:\Users\projects\C#\Projects\SEThrustersCalc\SEThrustersCalc\SEThrusterCalc\bin\Release\VRage.Math.xml
+G:\Users\projects\C#\Projects\SEThrustersCalc\SEThrustersCalc\SEThrusterCalc\bin\Release\VRage.Library.xml
+G:\Users\projects\C#\Projects\SEThrustersCalc\SEThrustersCalc\SEThrusterCalc\bin\Release\SharpDX.xml

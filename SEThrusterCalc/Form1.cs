@@ -3,11 +3,16 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
+using VRageMath;
+using SEThrusterCalc;
 
 namespace SEThrustersCalc
 {
@@ -16,7 +21,7 @@ namespace SEThrustersCalc
         public List<Thruster> ThrustersOnGrid;
         //public List<Thruster> ThrustersList;
         public Dictionary<string, Thruster> ThrustersList;
-        public Dictionary<string, double> Settings;
+        public Dictionary<string, dynamic> Settings;
         public MyXmlReader Storage;
 
         public Form1()
@@ -42,36 +47,46 @@ namespace SEThrustersCalc
             }
             return result;
         }
+        public double GetAirDensity(double Altitude)
+        {
+            float Density = 1.0f;
+            double distance = 70000;
+            double AverageRadius = 60000;
+            double MaxHillHeight = 0.12;
+            double LimitAltitude = 2;
+            double AtmosphereAltitude = MaxHillHeight * LimitAltitude;
+
+            double MinInfluence = 0;
+            double MaxInfluence = 1;
+            double PlanetaryInfluence = LineFunction(Altitude, 0, MaxInfluence, 10000, MinInfluence,0,1);
+
+            return PlanetaryInfluence;
+        }
+        public double GetThrustEffectiveness(Thruster Th) {
+            double AirDensity = GetAirDensity(Settings["Height"]);
+            double min = Math.Min(Th.EffectivenessAtMaxInfluence, Th.EffectivenessAtMinInfluence);
+            double max = Math.Max(Th.EffectivenessAtMaxInfluence, Th.EffectivenessAtMinInfluence);            
+            double result = LineFunction(AirDensity, Th.MinPlanetaryInfluence, Th.EffectivenessAtMinInfluence, Th.MaxPlanetaryInfluence, Th.EffectivenessAtMaxInfluence, min, max);
+            return result;
+        }
         private void RecalcThrust(double H) {
             double result = 0;
-            double MinTh = 0;             
-            double MiThH = 0;
-            double MaxTh = 0;
-            double MaxThH = 0;
             double ResThrust;
+            double NeededPower = 0;
 
             Thruster Th;
             foreach (DataGridViewRow row in dataGridView_ThrustersOnGrid.Rows)
             {
                 
                 string tName = row.Cells[1].Value.ToString();
-                Th = Storage.GetThtusterInfo(row.Cells[0].Value.ToString(), Settings["GridType"]);
-                if (Th.ThParametrs.Count > 0)
-                {
-                    //Th = ThrustersList[row.Cells[0].Value.ToString()];
-                    MinTh = Math.Round(Th.ThParametrs["Thrust"] * Th.ThParametrs["MinThrust"]);
-                    MiThH = Th.ThParametrs["MinThrustHeight"];
-                    MaxTh = Math.Round(Th.ThParametrs["Thrust"] * Th.ThParametrs["MaxThrust"]);
-                    MaxThH = Th.ThParametrs["MaxThrustHeight"];
-
-                    ResThrust = LineFunction(H, MiThH, MinTh, MaxThH, MaxTh); //k * H + b;
-                    if (ResThrust < MinTh)
-                        ResThrust = MinTh;
-                    if (ResThrust > MaxTh)
-                        ResThrust = MaxTh;
+                Th = ThrustersList[row.Cells[0].Value.ToString()]; 
+                if (true)
+                {                    
+                    ResThrust = GetThrustEffectiveness(Th) * Th.ForceMagnitude;
 
 
                     result += ResThrust * Convert.ToInt16(row.Cells[2].Value);
+                    NeededPower += Th.MaxPowerConsumption * Convert.ToInt16(row.Cells[2].Value);
                 }
                 else {
                     if (Settings["GridType"] == 1)
@@ -86,7 +101,8 @@ namespace SEThrustersCalc
                     }      
                 }
             }
-            label_ThrustSumm.Text = String.Format("Тяга:  {0,9:N0} / {1,9:N0} N.", result, Settings["Thrust"]);
+            label_ThrustSumm.Text = String.Format("Тяга:  {0,9:N3} / {1,9:N3} N.", result, Settings["Thrust"]);
+            label_MaxPower.Text = String.Format("Энергозатраты:  {0,9:N2} Mw ", NeededPower);
             if (result >= Settings["Thrust"])
             { label_ThrustSumm.ForeColor = System.Drawing.Color.DarkSeaGreen; }
             else
@@ -97,21 +113,24 @@ namespace SEThrustersCalc
         private void Init() {
             try
             {
-                Settings = new Dictionary<string, double>();
+                Settings = new Dictionary<string, dynamic>();
                 Storage = new MyXmlReader("Thrusters.xml");
                 UpdateSettings(false);
                 //ThrustersOnGrid = new List<Thruster>();
-                ThrustersList = Storage.GetThtusterList(Settings["GridType"]);
+                Storage.GetThtusterList(out ThrustersList);
+                //ThrustersList = Storage.GetThtusterList(Settings["GridType"]);
                 comboBox1.Items.Clear();
                 foreach (KeyValuePair<string,Thruster> th in ThrustersList)
                 {
+                    if (th.Value.GridType == (string)Settings["GridType"])
                     comboBox1.Items.Add(th.Value);
                 }
                 if (comboBox1.Items.Count > 0)
                     comboBox1.SelectedIndex = 0;
                 UpdateSettings();
             }
-            catch (Exception e) { 
+            catch (Exception e) {
+                MessageBox.Show(e.Message);
             }
         }
         public void UpdateSettings(bool UpdDisplay = true,bool UpdateGraphics = false) {
@@ -119,12 +138,12 @@ namespace SEThrustersCalc
 
             try
             {
-                textBox_GMass.BackColor = Color.White;
+                textBox_GMass.BackColor = System.Drawing.Color.White;
                 Settings["GridMass"] = Convert.ToDouble(textBox_GMass.Text);
             }
             catch (Exception e)
             {
-                textBox_GMass.BackColor = Color.Red;
+                textBox_GMass.BackColor = System.Drawing.Color.Red;
             }
 
             try
@@ -133,9 +152,9 @@ namespace SEThrustersCalc
                 Settings["DisAccel"] = (Double)trackBar_Accel.Value / 20;
                 Settings["Height"] = Convert.ToDouble(trackBar_Height.Value);
                 if (radioButton_small.Checked)
-                    Settings["GridType"] = 0;
+                    Settings["GridType"] = "Small";
                 else if(radioButton_large.Checked)
-                    Settings["GridType"] = 1;
+                    Settings["GridType"] = "Large";
                 
             }
             catch (Exception e)
@@ -146,7 +165,7 @@ namespace SEThrustersCalc
             {
                 double tmpGravity = 0;
                 double D = 0;
-                textBox_gravity.BackColor = Color.White;
+                textBox_gravity.BackColor = System.Drawing.Color.White;
                 Settings["GravityRange"] = Convert.ToDouble(textBoxGrange.Text);
                 tmpGravity = Convert.ToDouble(textBox_gravity.Text);
                 Settings["Gravity"] = Math.Round(Math.Pow(Settings["GravityRange"] / (Settings["GravityRange"] + Settings["Height"]), 7),3);
@@ -158,7 +177,7 @@ namespace SEThrustersCalc
             }
             catch (Exception e)
             {
-                textBox_gravity.BackColor = Color.Red;
+                textBox_gravity.BackColor = System.Drawing.Color.Red;
             }
             if (UpdDisplay)
                 UpdateDisplay();
@@ -171,9 +190,12 @@ namespace SEThrustersCalc
             }
         }
         public void UpdateDisplay() {
-            label_Accel.Text = String.Format("The desired acceleration. {0:N2} m/s/s.", Settings["DisAccel"]);
-            label_Height.Text = String.Format("Height {0,15:N0} m.", Settings["Height"]);
+            label_Accel.Text = String.Format("Желаемое ускорение. {0:N2} m/s/s.", Settings["DisAccel"]);
+            label_Height.Text = String.Format("Высота  {0,15:N0} m.", Settings["Height"]);
+            label_cGravity.Text = String.Format("Гравитация: {0,15:N3} g", Settings["Gravity"]);
+
             RecalcThrust(Settings["Height"]);
+
         }
         public void CreateGraph()
         {
@@ -186,15 +208,15 @@ namespace SEThrustersCalc
             int grids = 1;
             int scale = pnl_GRAPH.Height / grids;
             //начало координат
-            Point X0Y0 = new Point(pnl_GRAPH.Width - 50, pnl_GRAPH.Height - 50);
+            System.Drawing.Point X0Y0 = new System.Drawing.Point(pnl_GRAPH.Width - 50, pnl_GRAPH.Height - 50);
             //Строим ось Х
-            graph.DrawLine(middle_pen, new Point(0, pnl_GRAPH.Height - 50), new Point(pnl_GRAPH.Width, pnl_GRAPH.Height - 50));
+            graph.DrawLine(middle_pen, new System.Drawing.Point(0, pnl_GRAPH.Height - 50), new System.Drawing.Point(pnl_GRAPH.Width, pnl_GRAPH.Height - 50));
             //Строим ось Y
-            graph.DrawLine(middle_pen, new Point(50, 0), new Point(50, pnl_GRAPH.Height));
+            graph.DrawLine(middle_pen, new System.Drawing.Point(50, 0), new System.Drawing.Point(50, pnl_GRAPH.Height));
         }
         private void UpdateGraphics()
         {
-            List<Point> Coords = new List<Point>();
+            List<System.Drawing.Point> Coords = new List<System.Drawing.Point>();
             int min = trackBar_Height.Minimum;
             int max = trackBar_Height.Maximum;
             int step = 500;
@@ -339,7 +361,9 @@ namespace SEThrustersCalc
 
         private void button2_Click_1(object sender, EventArgs e)
         {
-            pnl_GRAPH.Refresh();
+            //pnl_GRAPH.Refresh();
+           //Storage.GetThtusterList(out ThrustersList);
+            GetAirDensity(5000);
         }
 
        
@@ -352,14 +376,31 @@ namespace SEThrustersCalc
         public string Name;
         public string DisplayName;
         public string GridType;
+
         public uint Count;
-        public Dictionary<string, double> ThParametrs;
+        //public Dictionary<string, double> ThParametrs;
+        public bool NeedsAtmosphereForInfluence;
+        public double EffectivenessAtMaxInfluence;
+        public double EffectivenessAtMinInfluence;
+        public double MaxPlanetaryInfluence;
+        public double MinPlanetaryInfluence;
+        public double MinPowerConsumption;
+        public double MaxPowerConsumption;
+        public double ForceMagnitude;
         public Thruster(string ThId, string GType = "") {
             Count = 0;
             Name = ThId;
             DisplayName = "";
             GridType = GType;
-            ThParametrs = new Dictionary<string, double>();
+            NeedsAtmosphereForInfluence = false;
+            EffectivenessAtMaxInfluence = 0f;
+            EffectivenessAtMinInfluence = 0f;
+            MaxPlanetaryInfluence = 0f;
+            MinPlanetaryInfluence = 0f;
+            MinPowerConsumption = 0f;
+            MaxPowerConsumption = 0f;
+            ForceMagnitude = 0f;
+            //ThParametrs = new Dictionary<string, double>();
         }
         public override string ToString()
         {
@@ -371,11 +412,12 @@ namespace SEThrustersCalc
         public XmlDocument xDoc = new XmlDocument();
         public XmlElement xRoot { get; set; }
         public XmlNodeList xThrusters { get; set; }
-
+        private Dictionary<string, Thruster> ThList;
         public MyXmlReader(string Filename) {
             xDoc.Load(Filename);
             xRoot = this.xDoc.DocumentElement;
             xThrusters = xRoot.ChildNodes;
+            ThList = new Dictionary<string, Thruster>();
         }
         public Thruster GetThtusterInfo(string ThrusterId, double GridT=1)
         {
@@ -405,7 +447,7 @@ namespace SEThrustersCalc
                             }
                             try
                             {
-                                result.ThParametrs[Attr.Name] = Convert.ToDouble(Attr.Value);
+                                //result.ThParametrs[Attr.Name] = Convert.ToDouble(Attr.Value);
                             }
                             catch (Exception e) {
                                 MessageBox.Show(e.Message);
@@ -420,6 +462,121 @@ namespace SEThrustersCalc
             }
             return result;
         }
+
+        public void GetThtusterInfo(Stream XMLFile)
+        {
+            XmlReader reader = XmlReader.Create(XMLFile);
+            Thruster ThrusterItem = new Thruster();
+            string Parent = "";
+            string Tagname = "";
+            bool IsThrustDefinition = true;
+            while (reader.Read())
+            {
+
+                if (reader.NodeType == XmlNodeType.Element)
+                {
+                    Tagname = reader.Name;
+                    if(reader.Name == "Id")
+                        Parent = "Id";
+                    if(reader.Name == "Definition")
+                        ThrusterItem = new Thruster();
+
+                }
+                if (reader.NodeType == XmlNodeType.EndElement)
+                {
+                    Tagname = "";
+                    if (reader.Name == "Definition") {
+                        IsThrustDefinition = true;
+                        if (ThrusterItem.Name != "" && ThrusterItem.Name != null)
+                        {
+                            ThList.Add(ThrusterItem.Name, ThrusterItem);
+                        }
+                    }
+                        
+                }
+
+                if (reader.NodeType == XmlNodeType.Text && IsThrustDefinition)
+                {                    
+                    try 
+                    {
+                        switch (Tagname)
+                        {
+                            case "Definition":
+                                ThrusterItem = new Thruster();
+                                break;
+                            case "TypeId":
+                                if (Parent == "Id" )
+                                {
+                                    if (reader.Value.ToLower() == "thrust")
+                                        IsThrustDefinition = true;
+                                    else
+                                        IsThrustDefinition = false ;
+
+                                }
+                                break;
+                            case "SubtypeId":
+                                if (Parent == "Id")
+                                {
+                                    ThrusterItem.Name = reader.Value;
+                                    Parent = "";
+                                }
+                                    
+                                break;
+                            case "DisplayName":
+                                ThrusterItem.DisplayName = reader.Value;
+                                break;
+                            case "CubeSize":
+                                ThrusterItem.GridType = reader.Value;
+                                break;
+                            case "ForceMagnitude":
+                                ThrusterItem.ForceMagnitude = Convert.ToDouble(ReplaceSeparator(reader.Value));
+                                break;
+                            case "MaxPowerConsumption":
+                                ThrusterItem.MaxPowerConsumption = Convert.ToDouble(ReplaceSeparator(reader.Value));
+                                break;
+                            case "MinPowerConsumption":
+                                ThrusterItem.MinPowerConsumption = Convert.ToDouble(ReplaceSeparator(reader.Value));
+                                break;
+                            case "MinPlanetaryInfluence":
+                                ThrusterItem.MinPlanetaryInfluence = Convert.ToDouble(ReplaceSeparator(reader.Value));
+                                break;
+                            case "MaxPlanetaryInfluence":
+                                ThrusterItem.MaxPlanetaryInfluence = Convert.ToDouble(ReplaceSeparator(reader.Value));
+                                break;
+                            case "EffectivenessAtMinInfluence":
+                                ThrusterItem.EffectivenessAtMinInfluence = Convert.ToDouble(ReplaceSeparator(reader.Value));
+                                break;
+                            case "EffectivenessAtMaxInfluence":
+                                ThrusterItem.EffectivenessAtMaxInfluence = Convert.ToDouble(ReplaceSeparator(reader.Value));
+                                break;
+                            case "NeedsAtmosphereForInfluence":
+                                ThrusterItem.NeedsAtmosphereForInfluence = Convert.ToBoolean(reader.Value);
+                                break;
+                        }
+
+                    }
+                    catch (Exception Ex)
+                    {
+                        MessageBox.Show(Ex.Message);
+                    }
+                    
+
+
+                }
+            }
+            
+        }
+        private string ReplaceSeparator(string value)
+        {
+            string dec_sep = Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator;
+            return value.Replace(",", dec_sep).Replace(".", dec_sep);
+        }
+        private string ReplaceSeparator(string value, string dec_sep)
+        {
+            //string dec_sep = Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator;
+            return value.Replace(",", dec_sep).Replace(".", dec_sep);
+        }
+
         public Dictionary<string, Thruster> GetThtusterList(double GridT = 1)
         {
             string GridType = "Large";
@@ -449,7 +606,7 @@ namespace SEThrustersCalc
                             }
                             try
                             {
-                                res.ThParametrs[Attr.Name] = Convert.ToDouble(Attr.Value);
+                               // res.ThParametrs[Attr.Name] = Convert.ToDouble(Attr.Value);
                             }
                             catch (Exception e)
                             {
@@ -466,6 +623,72 @@ namespace SEThrustersCalc
             }
             
             return result;
+        }
+
+        public void GetThtusterList(out Dictionary<string, Thruster> Thrustlist)
+        {
+            string path = Directory.GetCurrentDirectory();
+            if (ThList != null)
+                ThList.Clear();
+            else
+                ThList = new Dictionary<string, Thruster>();
+            if(Directory.Exists(path)) 
+            {
+                // This path is a directory
+                ProcessDirectory(path);
+            }
+            Thrustlist = ThList;
+            //FileStream zipToOpen = new FileStream(@"c:\users\exampleuser\release.zip", FileMode.Open);
+        }
+
+        private void ProcessDirectory(string targetDirectory)
+        {        
+            string result = "";
+            string[] fileEntries = Directory.GetFiles(targetDirectory);
+            foreach (string fileName in fileEntries)
+            {
+                ProcessFile(fileName);
+                result += fileName + "\n";
+            }
+               
+        }
+
+        private void ProcessFile(string fileName)
+        {
+            string FN = fileName.ToLower();
+            int szip = 0, sxml = 0;
+            szip = FN.IndexOf(".sbm");
+            sxml = FN.IndexOf(".sbc");
+            Stream XMLStream;
+            if (szip > 0)
+            {
+                FileStream zipToOpen = new FileStream(fileName, FileMode.Open);
+                ZipArchive archive = new ZipArchive(zipToOpen, ZipArchiveMode.Read);
+                foreach (ZipArchiveEntry entry in archive.Entries)
+                {
+                    if (entry.FullName.ToLower().IndexOf("cubeblocks") > 0)
+                    {
+                        XMLStream = entry.Open();
+                        GetThtusterInfo(entry.Open());
+                        XMLStream.Close();
+                        //MessageBox.Show(entry.FullName);
+                    }
+                    if (entry.FullName.EndsWith(".txt", StringComparison.OrdinalIgnoreCase))
+                    {
+                        //entry.ExtractToFile(Path.Combine(extractPath, entry.FullName));
+                    }
+                }
+                archive.Dispose();
+                zipToOpen.Close();
+            }
+            if (sxml > 0 && fileName.ToLower().IndexOf("cubeblocks") >0)
+            {
+                XMLStream = File.OpenRead(fileName);
+                if(XMLStream != null)
+                    GetThtusterInfo(XMLStream);
+                XMLStream.Close();
+            }
+            //throw new NotImplementedException();
         }
         
 
