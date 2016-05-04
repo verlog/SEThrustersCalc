@@ -20,3 +20,5 @@ G:\Users\projects\C#\Projects\SEThrustersCalc\SEThrustersCalc\SEThrusterCalc\bin
 G:\Users\projects\C#\Projects\SEThrustersCalc\SEThrustersCalc\SEThrusterCalc\bin\Release\VRage.Math.xml
 G:\Users\projects\C#\Projects\SEThrustersCalc\SEThrustersCalc\SEThrusterCalc\bin\Release\VRage.Library.xml
 G:\Users\projects\C#\Projects\SEThrustersCalc\SEThrustersCalc\SEThrusterCalc\bin\Release\SharpDX.xml
+G:\Users\projects\C#\Projects\SEThrustersCalc\SEThrustersCalc\SEThrusterCalc\bin\Release\VRage.Library.dll
+G:\Users\projects\C#\Projects\SEThrustersCalc\SEThrustersCalc\SEThrusterCalc\bin\Release\VRage.Math.dll

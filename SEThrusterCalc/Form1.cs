@@ -114,9 +114,10 @@ namespace SEThrustersCalc
             try
             {
                 Settings = new Dictionary<string, dynamic>();
-                Storage = new MyXmlReader("Thrusters.xml");
+                Storage = new MyXmlReader();
                 UpdateSettings(false);
                 //ThrustersOnGrid = new List<Thruster>();
+                //MyXmlReader->
                 Storage.GetThtusterList(out ThrustersList);
                 //ThrustersList = Storage.GetThtusterList(Settings["GridType"]);
                 comboBox1.Items.Clear();
@@ -393,13 +394,13 @@ namespace SEThrustersCalc
             DisplayName = "";
             GridType = GType;
             NeedsAtmosphereForInfluence = false;
-            EffectivenessAtMaxInfluence = 0f;
-            EffectivenessAtMinInfluence = 0f;
-            MaxPlanetaryInfluence = 0f;
-            MinPlanetaryInfluence = 0f;
-            MinPowerConsumption = 0f;
-            MaxPowerConsumption = 0f;
-            ForceMagnitude = 0f;
+            EffectivenessAtMaxInfluence = -1f;
+            EffectivenessAtMinInfluence = -1f;
+            MaxPlanetaryInfluence = -1f;
+            MinPlanetaryInfluence = -1f;
+            MinPowerConsumption = -1f;
+            MaxPowerConsumption = -1f;
+            ForceMagnitude = -1f;
             //ThParametrs = new Dictionary<string, double>();
         }
         public override string ToString()
@@ -413,6 +414,8 @@ namespace SEThrustersCalc
         public XmlElement xRoot { get; set; }
         public XmlNodeList xThrusters { get; set; }
         private Dictionary<string, Thruster> ThList;
+        public MyXmlReader(){
+        }
         public MyXmlReader(string Filename) {
             xDoc.Load(Filename);
             xRoot = this.xDoc.DocumentElement;
@@ -489,7 +492,19 @@ namespace SEThrustersCalc
                         IsThrustDefinition = true;
                         if (ThrusterItem.Name != "" && ThrusterItem.Name != null)
                         {
+                            if (ThrusterItem.EffectivenessAtMaxInfluence < 0 || ThrusterItem.EffectivenessAtMinInfluence < 0 || ThrusterItem.EffectivenessAtMaxInfluence == ThrusterItem.EffectivenessAtMinInfluence)
+                            {
+                                ThrusterItem.EffectivenessAtMaxInfluence = 1;
+                                ThrusterItem.EffectivenessAtMinInfluence = 1;
+                            }
+
+                            if (ThrusterItem.MaxPlanetaryInfluence < 0 || ThrusterItem.MinPlanetaryInfluence < 0 || ThrusterItem.MaxPlanetaryInfluence == ThrusterItem.MinPlanetaryInfluence)
+                            {
+                                ThrusterItem.MaxPlanetaryInfluence = 1;
+                                ThrusterItem.MinPlanetaryInfluence = 0;
+                            }    
                             ThList.Add(ThrusterItem.Name, ThrusterItem);
+
                         }
                     }
                         
@@ -543,11 +558,13 @@ namespace SEThrustersCalc
                             case "MaxPlanetaryInfluence":
                                 ThrusterItem.MaxPlanetaryInfluence = Convert.ToDouble(ReplaceSeparator(reader.Value));
                                 break;
-                            case "EffectivenessAtMinInfluence":
+                            case "EffectivenessAtMinInfluence":                                
                                 ThrusterItem.EffectivenessAtMinInfluence = Convert.ToDouble(ReplaceSeparator(reader.Value));
                                 break;
                             case "EffectivenessAtMaxInfluence":
                                 ThrusterItem.EffectivenessAtMaxInfluence = Convert.ToDouble(ReplaceSeparator(reader.Value));
+                                if (ThrusterItem.EffectivenessAtMaxInfluence == 0)
+                                    MessageBox.Show("Err");
                                 break;
                             case "NeedsAtmosphereForInfluence":
                                 ThrusterItem.NeedsAtmosphereForInfluence = Convert.ToBoolean(reader.Value);
@@ -672,10 +689,6 @@ namespace SEThrustersCalc
                         GetThtusterInfo(entry.Open());
                         XMLStream.Close();
                         //MessageBox.Show(entry.FullName);
-                    }
-                    if (entry.FullName.EndsWith(".txt", StringComparison.OrdinalIgnoreCase))
-                    {
-                        //entry.ExtractToFile(Path.Combine(extractPath, entry.FullName));
                     }
                 }
                 archive.Dispose();
